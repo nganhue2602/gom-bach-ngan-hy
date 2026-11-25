@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#faf7f1" />
+  <meta name="description" content="Website demo bán hàng cho thương hiệu Gốm Bách Ngân Hỷ, phục vụ đồ án chiến lược thương mại điện tử." />
+  <title>Gốm Bách Ngân Hỷ | Website demo bán hàng</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <script src="products.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <svg aria-hidden="true" style="display:none" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></symbol>
+    <symbol id="i-bag" viewBox="0 0 24 24"><path d="M4.5 8h15l1.1 12H3.4L4.5 8Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M20.8 9.1c0 4.5-8.8 10.7-8.8 10.7S3.2 13.6 3.2 9.1A4.65 4.65 0 0 1 12 7a4.65 4.65 0 0 1 8.8 2.1Z"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M3 7h18M3 12h18M3 17h18"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M5 5 19 19M19 5 5 19"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h16"/><path d="m13.5 5.5 6.5 6.5-6.5 6.5"/></symbol>
+    <symbol id="i-minus" viewBox="0 0 24 24"><path d="M4 12h16"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 4v16M4 12h16"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 2 2.8 6.2 6.7.6-5 4.5 1.4 6.7L12 16.5 6.1 20l1.4-6.7-5-4.5 6.7-.6L12 2Z"/></symbol>
+  </svg>
+
+  <div class="topbar">Website demo đồ án · Giá và đơn hàng chỉ mang tính minh họa</div>
+
+  <header class="site-header" id="site-header">
+    <div class="header-wrap">
+      <button class="icon-btn nav-mobile" data-action="mobile-open" aria-label="Mở menu"><svg><use href="#i-menu"></use></svg></button>
+      <a href="#/" class="brand" aria-label="Bách Ngân Hỷ">
+        <span class="brand-mark">BNH</span>
+        <span class="brand-copy">
+          <strong>Bách Ngân Hỷ</strong>
+          <small>Gốm thủ công</small>
+        </span>
+      </a>
+      <nav class="desktop-nav" aria-label="Điều hướng chính">
+        <a href="#/">Trang chủ</a>
+        <a href="#/shop">Sản phẩm</a>
+        <a href="#/gifts">Quà tặng</a>
+        <a href="#/story">Câu chuyện</a>
+        <a href="#/help">Hỗ trợ</a>
+      </nav>
+      <div class="header-actions">
+        <button class="icon-btn" data-action="search-open" aria-label="Tìm kiếm"><svg><use href="#i-search"></use></svg></button>
+        <button class="icon-btn" data-action="cart-open" aria-label="Mở giỏ hàng"><svg><use href="#i-bag"></use></svg><span class="count-dot" id="cart-count">0</span></button>
+      </div>
+    </div>
+  </header>
+
+  <main id="app" tabindex="-1"></main>
+
+  <footer class="site-footer">
+    <div class="footer-grid container">
+      <div>
+        <div class="brand footer-brand">
+          <span class="brand-mark">BNH</span>
+          <span class="brand-copy">
+            <strong>Bách Ngân Hỷ</strong>
+            <small>Gốm thủ công</small>
+          </span>
+        </div>
+        <p class="footer-note">Website demo phục vụ đồ án chiến lược TMĐT. Thiết kế tập trung vào trải nghiệm bán hàng đa kênh: website, Facebook, Instagram, TikTok, Threads.</p>
+      </div>
+      <div>
+        <h4>Liên kết nhanh</h4>
+        <a href="#/shop">Mua sắm</a>
+        <a href="#/gifts">Quà tặng</a>
+        <a href="#/story">Câu chuyện thương hiệu</a>
+        <a href="#/orders">Đơn hàng demo</a>
+      </div>
+      <div>
+        <h4>Kênh tham khảo</h4>
+        <a href="https://www.facebook.com/thuykinhceramics" target="_blank" rel="noopener">Facebook ↗</a>
+        <a href="https://www.instagram.com/bachnganhy/" target="_blank" rel="noopener">Instagram ↗</a>
+        <a href="https://www.tiktok.com/@bachnganhy" target="_blank" rel="noopener">TikTok ↗</a>
+      </div>
+      <div>
+        <h4>Thông tin demo</h4>
+        <p>Đây là website mô phỏng, không nhận đơn thật.</p>
+        <a href="https://www.facebook.com/thuykinhceramics" target="_blank" rel="noopener">Liên hệ qua Facebook chính thức ↗</a>
+      </div>
+    </div>
+    <div class="footer-bottom container">© 2026 Bách Ngân Hỷ · Website demo học thuật, không đại diện kênh bán hàng chính thức.</div>
+  </footer>
+
+  <div class="overlay" id="overlay" hidden></div>
+
+  <aside class="side-panel" id="cart-panel" hidden>
+    <div class="panel-head">
+      <h3>Giỏ hàng demo</h3>
+      <button class="icon-btn" data-action="close-all" aria-label="Đóng"><svg><use href="#i-close"></use></svg></button>
+    </div>
+    <div id="cart-panel-body" class="panel-body"></div>
+    <div id="cart-panel-footer" class="panel-footer"></div>
+  </aside>
+
+  <aside class="side-panel mobile-panel" id="mobile-panel" hidden>
+    <div class="panel-head">
+      <h3>Menu</h3>
+      <button class="icon-btn" data-action="close-all" aria-label="Đóng"><svg><use href="#i-close"></use></svg></button>
+    </div>
+    <div class="panel-links">
+      <a href="#/">Trang chủ</a>
+      <a href="#/shop">Sản phẩm</a>
+      <a href="#/gifts">Quà tặng</a>
+      <a href="#/story">Câu chuyện</a>
+      <a href="#/help">Hỗ trợ</a>
+      <a href="#/orders">Đơn hàng demo</a>
+    </div>
+  </aside>
+
+  <div class="search-modal" id="search-modal" hidden>
+    <div class="search-head">
+      <h3>Tìm sản phẩm</h3>
+      <button class="icon-btn" data-action="close-all" aria-label="Đóng"><svg><use href="#i-close"></use></svg></button>
+    </div>
+    <label class="search-box">
+      <svg><use href="#i-search"></use></svg>
+      <input id="global-search" type="search" placeholder="Tìm: cốc, đĩa, mèo, penguin..." autocomplete="off" />
+    </label>
+    <div id="search-results" class="search-results"></div>
+  </div>
+
+  <dialog id="quick-dialog" class="quick-dialog">
+    <button class="dialog-close icon-btn" data-action="quick-close" aria-label="Đóng"><svg><use href="#i-close"></use></svg></button>
+    <div id="quick-body"></div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
