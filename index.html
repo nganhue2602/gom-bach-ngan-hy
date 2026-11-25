@@ -9,9 +9,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css" />
-  <script src="products.js" defer></script>
-  <script src="app.js" defer></script>
+  <link rel="stylesheet" href="styles.css?v=lab-hover-20261126" />
+  <script src="products.js?v=lab-hover-20261126" defer></script>
+  <script src="app.js?v=lab-hover-20261126" defer></script>
 </head>
 <body>
   <svg aria-hidden="true" style="display:none" xmlns="http://www.w3.org/2000/svg">
@@ -131,6 +131,10 @@
     <div id="quick-body"></div>
   </dialog>
 
+  <dialog id="image-dialog" class="image-dialog" aria-label="Phóng to hình ảnh sản phẩm">
+    <button class="icon-btn image-close" data-action="image-close" aria-label="Đóng ảnh phóng to"><svg><use href="#i-close"></use></svg></button>
+    <img id="zoom-image" alt="Hình sản phẩm phóng to">
+  </dialog>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 </body>
 </html>

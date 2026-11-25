@@ -21,6 +21,7 @@
   let state = load();
   let filters = { category: 'all', q: '', sort: 'featured' };
   let toastTimer;
+  let lastRoute = '';
 
   const save = () => localStorage.setItem(STORE_KEY, JSON.stringify(state));
   const byId = (id) => PRODUCTS.find(p => p.id === id);
@@ -63,12 +64,19 @@
   }
 
   function productCard(product) {
+    const second = product.gallery?.find(src => src !== product.image);
+    const isSmallOriginal = /\/hd\/(?:cat_|grid[A-C]_)/.test(product.image);
     return `
-      <article class="product-card">
-        <a class="product-thumb" href="#/product/${product.slug}">
-          <img src="${product.image}" alt="${esc(product.name)}" loading="lazy">
-          <span class="product-badge">${esc(product.badge)}</span>
-        </a>
+      <article class="product-card ${isSmallOriginal ? 'source-small' : 'source-large'}">
+        <div class="product-media">
+          <a class="product-thumb" href="#/product/${product.slug}" aria-label="Xem chi tiết ${esc(product.name)}">
+            <img class="product-img-main" src="${product.image}" alt="${esc(product.name)}" loading="lazy" decoding="async">
+            ${second ? `<img class="product-img-alt" src="${second}" alt="Góc chụp khác của ${esc(product.name)}" loading="lazy" decoding="async" aria-hidden="true">` : ''}
+            <span class="product-badge">${esc(product.badge)}</span>
+            <span class="product-hover-hint">Khám phá sản phẩm ${icon('arrow')}</span>
+          </a>
+          <button type="button" class="product-quick-overlay" data-action="quick" data-id="${product.id}" aria-label="Xem nhanh ${esc(product.name)}">Xem nhanh ${icon('search')}</button>
+        </div>
         <div class="product-info">
           <div>
             <div class="product-category">${esc(categoryLabel(product.category))}</div>
@@ -76,10 +84,10 @@
             <p class="product-text">${esc(product.short)}</p>
           </div>
           <div class="product-bottom">
-            <strong class="product-price">${money(product.price)}</strong>
+            <div class="product-price-wrap"><strong class="product-price">${money(product.price)}</strong><small>Giá demo</small></div>
             <div class="product-actions">
-              <button class="mini-btn" data-action="quick" data-id="${product.id}">Xem nhanh</button>
-              <button class="mini-btn solid" data-action="add-cart" data-id="${product.id}">${icon('bag')}</button>
+              <button class="mini-btn" data-action="quick" data-id="${product.id}" aria-label="Xem nhanh ${esc(product.name)}">Xem nhanh</button>
+              <button class="mini-btn solid" data-action="add-cart" data-id="${product.id}" aria-label="Thêm ${esc(product.name)} vào giỏ">${icon('bag')}</button>
             </div>
           </div>
         </div>
@@ -107,9 +115,9 @@
   function homePage() {
     const best = PRODUCTS.filter(p => p.featured).slice(0,4);
     const collections = [
-      { id:'giang-sinh', title:'Giáng sinh', text:'Bộ sưu tập ấm áp với sắc đỏ lễ hội.', image:'assets/media/products/christmas-group.jpg' },
-      { id:'meo-xinh', title:'Mèo xinh', text:'Đồ gốm đáng yêu, trẻ trung, dễ tặng.', image:'assets/media/products/cat_1_3.jpg' },
-      { id:'ban-an-hang-ngay', title:'Bàn ăn hằng ngày', text:'Những món gốm nhẹ nhàng để dùng mỗi ngày.', image:'assets/media/products/gridA_1_2.jpg' }
+      { id:'giang-sinh', title:'Giáng sinh', text:'Bộ sưu tập ấm áp với sắc đỏ lễ hội.', image:'assets/media/products/hd/christmas-group.webp' },
+      { id:'meo-xinh', title:'Mèo xinh', text:'Đồ gốm đáng yêu, trẻ trung, dễ tặng.', image:'assets/media/products/hd/cat_1_3.webp' },
+      { id:'ban-an-hang-ngay', title:'Bàn ăn hằng ngày', text:'Những món gốm nhẹ nhàng để dùng mỗi ngày.', image:'assets/media/products/hd/gridA_1_2.webp' }
     ];
 
     return `
@@ -117,19 +125,24 @@
         <div class="hero-copy">
           <span class="kicker">Gốm Bách Ngân Hỷ</span>
           <h1>Gốm thủ công<br>cho căn bếp <em>ấm áp hơn</em></h1>
-          <p>Thiết kế website demo theo hướng tối giản, tập trung bán hàng đa kênh cho thương hiệu gốm: dễ xem, dễ chọn, dễ đặt mua.</p>
+          <p>Khám phá những chiếc cốc, bộ đĩa và vật dụng bằng gốm mang sắc màu riêng. Chọn một món cho căn bếp hoặc một món quà nhỏ thật ý nghĩa.</p>
           <div class="hero-actions">
             <a class="btn btn-primary" href="#/shop">Mua sắm ngay ${icon('arrow')}</a>
             <a class="btn btn-outline" href="#/story">Xem câu chuyện</a>
           </div>
-          <ul class="hero-points">
-            <li>${icon('star')} Chọn sản phẩm theo bộ sưu tập</li>
-            <li>${icon('star')} Hỗ trợ bán trên website và mạng xã hội</li>
-            <li>${icon('star')} Tông màu đỏ – xanh lá đặc trưng</li>
-          </ul>
+          <p class="hero-subnote">Bộ sưu tập gốm · Cốc, đĩa và quà tặng thủ công</p>
         </div>
-        <div class="hero-media">
-          <img src="assets/media/products/hero-christmas.jpg" alt="Bộ sưu tập gốm Giáng sinh" />
+        <div class="hero-media" aria-label="Hình ảnh bộ sưu tập gốm">
+          <div class="hero-slides">
+            <img class="hero-slide active" src="assets/media/products/hd/hero-christmas.webp" alt="Bộ sưu tập gốm Giáng sinh" fetchpriority="high">
+            <img class="hero-slide" src="assets/media/products/hd/penguin-trio.webp" alt="Nhóm ly gốm hình Penguin" loading="lazy">
+            <img class="hero-slide" src="assets/media/products/hd/mugs-stack.webp" alt="Bộ cốc gốm họa tiết Giáng sinh" loading="lazy">
+          </div>
+          <div class="hero-slide-controls" aria-label="Chuyển ảnh bộ sưu tập">
+            <button class="hero-dot active" type="button" data-action="hero-slide" data-index="0" aria-label="Ảnh bộ gốm thứ nhất" aria-pressed="true"></button>
+            <button class="hero-dot" type="button" data-action="hero-slide" data-index="1" aria-label="Ảnh bộ gốm thứ hai" aria-pressed="false"></button>
+            <button class="hero-dot" type="button" data-action="hero-slide" data-index="2" aria-label="Ảnh bộ gốm thứ ba" aria-pressed="false"></button>
+          </div>
         </div>
       </section>
 
@@ -138,7 +151,7 @@
         <div class="collection-grid">
           ${collections.map(c => `
             <a class="collection-card" href="#/shop?category=${c.id}">
-              <img src="${c.image}" alt="${esc(c.title)}">
+              <img src="${c.image}" alt="${esc(c.title)}" loading="lazy" decoding="async">
               <div class="collection-card__body">
                 <h3>${esc(c.title)}</h3>
                 <p>${esc(c.text)}</p>
@@ -155,35 +168,29 @@
 
       <section class="section container editorial">
         <div class="editorial-copy">
-          <span class="kicker">Thiết kế web định hướng bán hàng</span>
-          <h2>Ít chi tiết hơn,<br>gọn hơn, nhìn ra chất gốm hơn.</h2>
-          <p>Trang chủ ưu tiên hình sản phẩm thật, bố cục thoáng và CTA rõ ràng. Hệ thống màu dùng đỏ gạch và xanh lá đậm để giữ cảm giác thủ công nhưng vẫn hiện đại.</p>
+          <span class="kicker">Gốm & những khoảnh khắc nhỏ</span>
+          <h2>Một chút sắc màu<br>cho bàn ăn mỗi ngày.</h2>
+          <p>Những món gốm với họa tiết riêng, dễ kết hợp cùng bộ sưu tập của bạn. Từ một chiếc cốc xinh đến bộ bàn ăn đồng điệu, mọi góc nhỏ đều có câu chuyện.</p>
           <a class="btn btn-primary" href="#/gifts">Xem gợi ý quà tặng ${icon('arrow')}</a>
         </div>
         <div class="editorial-stack">
-          <img src="assets/media/products/mugs-stack.jpg" alt="Ly gốm chụp cận cảnh">
-          <img src="assets/media/products/gridA_1_2.jpg" alt="Bộ bàn ăn xanh">
+          <img src="assets/media/products/hd/mugs-stack.webp" alt="Ly gốm chụp cận cảnh">
+          <img src="assets/media/products/hd/gridA_1_2.webp" alt="Bộ bàn ăn xanh">
         </div>
       </section>
 
       <section class="section container newsletter-box">
         <div>
-          <span class="kicker">Cập nhật bộ sưu tập</span>
-          <h2>Nhận tin mới từ Bách Ngân Hỷ</h2>
-          <p>Đăng ký nhận thông tin về bộ sưu tập mới, sản phẩm nổi bật và cảm hứng bài trí bàn ăn.</p>
+          <span class="kicker">Theo dõi thương hiệu</span>
+          <h2>Khám phá những bộ gốm mới</h2>
+          <p>Xem hình ảnh và nội dung cập nhật trên các kênh chính thức của Bách Ngân Hỷ.</p>
         </div>
-        <form class="newsletter-form" onsubmit="return false;">
-          <input type="email" placeholder="Nhập email của bạn">
-          <button class="btn btn-primary" type="button">Đăng ký</button>
-        </form>
+        <a class="btn btn-primary" href="https://www.instagram.com/bachnganhy/" target="_blank" rel="noopener">Xem Instagram ${icon('arrow')}</a>
       </section>
     `;
   }
 
   function shopPage() {
-    const queryCategory = routeQuery().get('category');
-    if (queryCategory && CATEGORIES.some(c => c.id === queryCategory)) filters.category = queryCategory;
-
     return `
       <section class="page-hero container narrow">
         <span class="kicker">Cửa hàng</span>
@@ -231,7 +238,7 @@
     return `
       <section class="container product-detail">
         <div class="gallery-main">
-          <img id="detail-image" src="${p.gallery?.[0] || p.image}" alt="${esc(p.name)}">
+          <button class="detail-image-button ${/\/hd\/(?:cat_|grid[A-C]_)/.test(p.image) ? 'low-resolution-original' : ''}" type="button" data-action="image-zoom" aria-label="Mở ảnh lớn ${esc(p.name)}"><img id="detail-image" src="${p.gallery?.[0] || p.image}" alt="${esc(p.name)}"><span>Di chuột để soi · Nhấn để mở lớn ↗</span></button>
           <div class="thumbs">${(p.gallery || [p.image]).map((img, index) => `<button class="thumb ${index===0?'active':''}" data-action="thumb" data-image="${img}"><img src="${img}" alt="${esc(p.name)}"></button>`).join('')}</div>
         </div>
         <div class="detail-copy">
@@ -276,7 +283,7 @@
             <li>Thiệp viết tay và hộp quà tối giản.</li>
           </ul>
         </div>
-        <img src="assets/media/products/gridB_3_1.jpg" alt="Cốc hoa đỏ làm quà tặng">
+        <img src="assets/media/products/hd/gridB_3_1.webp" alt="Cốc hoa đỏ làm quà tặng">
       </section>
       <section class="section container"><div class="product-grid">${picks.map(productCard).join('')}</div></section>
     `;
@@ -307,15 +314,16 @@
   }
 
   function helpPage() {
+    const items = [
+      ['Đây có phải website chính thức của shop không?', 'Không. Đây là website demo phục vụ đồ án học thuật, dùng hình ảnh người dùng cung cấp từ các kênh thương hiệu.'],
+      ['Giá trên web có phải giá bán chính thức không?', 'Không. Giá trên các sản phẩm được thiết lập để mô phỏng trải nghiệm mua sắm, không đại diện bảng giá chính thức.'],
+      ['Đơn hàng có được gửi thật đến shop không?', 'Không. Đơn demo chỉ được lưu trên trình duyệt của thiết bị đang dùng.'],
+      ['Khi sản phẩm gốm bị vỡ trong quá trình giao thì sao?', 'Vui lòng liên hệ trực tiếp với shop để được hướng dẫn và xác nhận chính sách đang áp dụng. Không có giao hàng thật từ website demo.']
+    ];
     return `
-      <section class="page-hero container narrow">
-        <span class="kicker">Hỗ trợ</span>
-        <h1>Câu hỏi thường gặp</h1>
-      </section>
+      <section class="page-hero container narrow"><span class="kicker">Hỗ trợ</span><h1>Câu hỏi thường gặp</h1><p>Chạm hoặc nhấn Enter vào từng câu hỏi để mở / đóng nội dung.</p></section>
       <section class="faq-list container">
-        <article class="faq-item"><h3>Đây có phải website chính thức của shop không?</h3><p>Không. Đây là website demo phục vụ đồ án học thuật, dùng hình ảnh tham khảo từ các kênh chính thức của thương hiệu.</p></article>
-        <article class="faq-item"><h3>Giá trên web có phải giá bán chính thức không?</h3><p>Không. Giá được thiết lập để mô phỏng trải nghiệm mua sắm và minh họa cho giao diện.</p></article>
-        <article class="faq-item"><h3>Đơn hàng có gửi thật đến shop không?</h3><p>Không. Đơn chỉ được lưu ngay trên trình duyệt của thiết bị đang dùng để trình diễn chức năng.</p></article>
+        ${items.map(([question,answer])=>`<details class="faq-item"><summary>${esc(question)}<span aria-hidden="true">${icon('plus')}</span></summary><p>${esc(answer)}</p></details>`).join('')}
       </section>
     `;
   }
@@ -397,14 +405,22 @@
 
   function render() {
     const app = $('#app');
+    const previousRoute = lastRoute;
+    pauseHeroCarousel();
     closeLayers();
     if ($('#quick-dialog').open) $('#quick-dialog').close();
     const parts = routeParts();
+    if (parts[0] === 'shop' && lastRoute !== route()) {
+      filters.category = routeQuery().get('category') || 'all';
+    }
+    lastRoute = route();
     syncCounts();
 
     if (!parts.length) {
       app.innerHTML = homePage();
-      window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
+      setupReveal();
+      initHeroCarousel();
+      if (previousRoute !== route()) window.scrollTo({ top: 0, behavior: 'auto' });
       return;
     }
 
@@ -420,6 +436,8 @@
       default: app.innerHTML = emptyPage('Trang không tồn tại', 'Hãy quay lại trang chủ hoặc thử chọn một liên kết khác.', '<a class="btn btn-primary" href="#/">Về trang chủ</a>');
     }
     syncCounts();
+    setupReveal();
+    if (previousRoute !== route()) window.scrollTo({ top: 0, behavior: 'auto' });
   }
 
   function renderCart() {
@@ -453,6 +471,45 @@
       <div class="summary-total"><span>Tạm tính</span><strong>${money(cartTotal())}</strong></div>
       <a class="btn btn-primary block" href="#/checkout">Thanh toán demo ${icon('arrow')}</a>
     `;
+  }
+
+  let heroTimer;
+  let currentHero = 0;
+  function showHeroSlide(index) {
+    const images = $$('.hero-slide');
+    const dots = $$('.hero-dot');
+    if (!images.length) return;
+    currentHero = ((index % images.length) + images.length) % images.length;
+    images.forEach((node,i) => node.classList.toggle('active',i===currentHero));
+    dots.forEach((node,i) => {
+      node.classList.toggle('active',i===currentHero);
+      node.setAttribute('aria-pressed',String(i===currentHero));
+    });
+  }
+  function pauseHeroCarousel() { clearInterval(heroTimer); heroTimer = undefined; }
+  function startHeroCarousel() {
+    pauseHeroCarousel();
+    if (!$('.hero-slides') || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    heroTimer = window.setInterval(() => showHeroSlide(currentHero + 1), 5000);
+  }
+  function initHeroCarousel() { currentHero=0; startHeroCarousel(); }
+
+  let revealObserver;
+  function setupReveal() {
+    if (revealObserver) revealObserver.disconnect();
+    if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    revealObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, {threshold: .06, rootMargin:'0px 0px 60px 0px'});
+    $$('.section, .product-card, .collection-card, .editorial, .page-hero, .hero').forEach(el => {
+      el.classList.add('reveal-ready');
+      revealObserver.observe(el);
+    });
   }
 
   function openQuick(productId) {
@@ -491,6 +548,14 @@
       </a>`).join('') : `<p class="muted">Không tìm thấy sản phẩm phù hợp.</p>`;
   }
 
+  function openImageZoom(src, alt) {
+    const dlg=$('#image-dialog');
+    if (!dlg) return;
+    $('#zoom-image').src=src;
+    $('#zoom-image').alt=alt;
+    dlg.showModal();
+  }
+
   function normalize(str='') {
     return str.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
   }
@@ -523,13 +588,20 @@
     if (action === 'search-open') { openLayer('#search-modal'); $('#global-search').focus(); updateSearchResults(''); }
     if (action === 'cart-open') { renderCart(); openLayer('#cart-panel'); }
     if (action === 'close-all') closeLayers();
-    if (action === 'add-cart') addCart(id, 1);
+    if (action === 'add-cart') {
+      const fromQuick = $('#quick-dialog').open;
+      addCart(id, 1);
+      if (fromQuick) { $('#quick-dialog').close(); renderCart(); openLayer('#cart-panel'); }
+    }
     if (action === 'quick') openQuick(id);
     if (action === 'quick-close' && $('#quick-dialog').open) $('#quick-dialog').close();
+    if (action === 'image-close' && $('#image-dialog').open) $('#image-dialog').close();
     if (action === 'plus-cart') changeCart(id, 1);
     if (action === 'minus-cart') changeCart(id, -1);
     if (action === 'remove-cart') { delete state.cart[id]; save(); syncCounts(); renderCart(); }
     if (action === 'delete-order') { state.orders = state.orders.filter(o => o.id !== id); save(); render(); showToast('Đã xóa đơn demo'); }
+    if (action === 'image-zoom') { const img=$('#detail-image'); if(img) openImageZoom(img.src,img.alt); }
+    if (action === 'hero-slide') { showHeroSlide(Number(actionEl.dataset.index)); startHeroCarousel(); }
     if (action === 'thumb') {
       const image = actionEl.dataset.image;
       $('#detail-image').src = image;
@@ -543,6 +615,34 @@
     filters.category = catBtn.dataset.filterCategory;
     render();
   });
+
+  // Progressive enhancement: detail image follows pointer (mouse/stylus), never traps touch.
+  document.addEventListener('pointermove', (event) => {
+    if (event.pointerType === 'touch') return;
+    const target = event.target.closest('.detail-image-button');
+    if (!target) return;
+    const bounds = target.getBoundingClientRect();
+    const x = Math.min(100, Math.max(0, (event.clientX - bounds.left) / bounds.width * 100));
+    const y = Math.min(100, Math.max(0, (event.clientY - bounds.top) / bounds.height * 100));
+    target.style.setProperty('--zoom-x', `${x}%`);
+    target.style.setProperty('--zoom-y', `${y}%`);
+    target.classList.add('is-zooming');
+  }, { passive: true });
+  document.addEventListener('pointerout', event => {
+    const target=event.target.closest('.detail-image-button');
+    if (target && !target.contains(event.relatedTarget)) target.classList.remove('is-zooming');
+  });
+  document.addEventListener('pointerenter', e => { if(e.target.matches?.('.hero-media')) pauseHeroCarousel(); }, true);
+  document.addEventListener('pointerleave', e => { if(e.target.matches?.('.hero-media')) startHeroCarousel(); }, true);
+
+  // If an asset is unavailable, show a clear fallback rather than a broken image icon.
+  document.addEventListener('error', event => {
+    const img = event.target;
+    if (!(img instanceof HTMLImageElement) || img.dataset.fallbackShown) return;
+    img.dataset.fallbackShown='1';
+    img.src='assets/media/products/image-unavailable.svg';
+    img.alt='Ảnh sản phẩm đang được cập nhật';
+  }, true);
 
   document.addEventListener('input', (e) => {
     if (e.target.id === 'global-search') updateSearchResults(e.target.value);
@@ -598,17 +698,28 @@
   });
 
   document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      openLayer('#search-modal');
+      $('#global-search').focus();
+      updateSearchResults('');
+    }
     if (e.key === 'Escape') {
       closeLayers();
       if ($('#quick-dialog').open) $('#quick-dialog').close();
+      if ($('#image-dialog').open) $('#image-dialog').close();
     }
   });
 
   $('#overlay').addEventListener('click', closeLayers);
+  $('#image-dialog').addEventListener('click', e => { if(e.target === $('#image-dialog')) $('#image-dialog').close(); });
   $('#quick-dialog').addEventListener('click', (e) => {
     if (e.target === $('#quick-dialog')) $('#quick-dialog').close();
   });
   window.addEventListener('hashchange', render);
+  window.addEventListener('scroll', () => {
+    $('#site-header')?.classList.toggle('is-scrolled', window.scrollY > 15);
+  }, {passive:true});
 
   syncCounts();
   render();
