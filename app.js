@@ -124,7 +124,12 @@
       <section class="hero container">
         <div class="hero-copy">
           <span class="kicker">Gốm Bách Ngân Hỷ</span>
-          <h1>Gốm thủ công<br>cho căn bếp <em>ấm áp hơn</em></h1>
+          <h1 class="hero-title">
+  <span class="hero-green">Gốm</span>
+  <span class="hero-red">có gu,</span>
+  <span class="hero-green">nhà</span>
+  <span class="hero-red">có chất.</span>
+</h1>
           <p>Khám phá những chiếc cốc, bộ đĩa và vật dụng bằng gốm mang sắc màu riêng. Chọn một món cho căn bếp hoặc một món quà nhỏ thật ý nghĩa.</p>
           <div class="hero-actions">
             <a class="btn btn-primary" href="#/shop">Mua sắm ngay ${icon('arrow')}</a>
