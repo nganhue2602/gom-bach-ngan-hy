@@ -190,3 +190,16 @@ html{scroll-padding-top:115px}
 }
 /* Keep the accent phrase together on small screens. */
 @media(max-width:560px){.hero h1 em{white-space:nowrap}}
+/* Logo chính thức Bách Ngân Hỷ */
+.brand-logo {
+  display: block;
+  width: 145px;
+  height: auto;
+  object-fit: contain;
+}
+
+@media (max-width: 560px) {
+  .brand-logo {
+    width: 115px;
+  }
+}
